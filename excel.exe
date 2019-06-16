@@ -1,0 +1,58 @@
+Sub Macro()
+    Cells.Delete
+    Dim staffList() As String
+    staffList = Split("Apple;Orange;Lemon;Cherry;Grape", ";")
+    staffListLen = arrayLen(staffList)
+
+    For m = 0 To 11
+        Cells(3 + (m * (6 + staffListLen)), 1) = MonthName(m + 1, True)
+        For i = 0 To 30
+            ' 3 row fo seperating, 2 row for date, 1 for month
+            Cells(4 + (m * (6 + staffListLen)), i + 2) = DateSerial(2019, 1 + m, i + 1)
+            Cells(5 + (m * (6 + staffListLen)), i + 2) = DateSerial(2019, 1 + m, i + 1)
+            If Weekday(Cells(4 + (m * (6 + staffListLen)), i + 2)) = 7 Then
+                Range(Cells(4 + (m * (6 + staffListLen)), i + 2), Cells(4 + (m * (6 + staffListLen)) + 1 + staffListLen, i + 2)).Interior.Color = RGB(255, 0, 0)
+            End If
+            Next i
+    
+        ' Delete Date not match
+        For colNum = 30 To 32
+            If Month(Cells(4 + (m * (6 + staffListLen)), colNum)) <> Month(Cells(4 + (m * (6 + staffListLen)), 2)) Then
+                Range(Cells(4 + (m * (6 + staffListLen)), colNum), Cells(4 + (m * (6 + staffListLen)) + 1 + staffListLen, colNum)).ClearContents
+            End If
+            Next colNum
+                
+        For i = 0 To (staffListLen - 1)
+            Cells(6 + i + (m * (6 + staffListLen)), 1) = staffList(i)
+            Next i
+    
+    Next m
+    
+    ' Formating
+    For m = 0 To 11
+        With Cells(3 + (m * (6 + staffListLen)), 1)
+            .Font.Bold = True
+            .Font.Underline = True
+            .HorizontalAlignment = xlCenter
+        End With
+        
+        Range(Cells(4 + (m * (6 + staffListLen)), 2), Cells(4 + (m * (6 + staffListLen)), 32)).NumberFormat = "ddd"
+        Range(Cells(5 + (m * (6 + staffListLen)), 2), Cells(5 + (m * (6 + staffListLen)), 32)).NumberFormat = "dd"
+        With Range(Cells(4 + (m * (6 + staffListLen)), 2), Cells(5 + (m * (6 + staffListLen)), 32))
+            .Font.Size = 10
+            .ColumnWidth = 5
+        End With
+        
+        
+        Next m
+        
+    Columns(1).AutoFit
+    
+    ' Testing
+
+    
+End Sub
+
+Function arrayLen(ary As Variant) As Integer
+    arrayLen = UBound(ary) - LBound(ary) + 1
+End Function
