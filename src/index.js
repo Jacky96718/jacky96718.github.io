@@ -31,3 +31,4 @@ function draw() {
   player.draw(ctx);
   //requestAnimationFrame(draw);
 }
+
