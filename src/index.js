@@ -12,7 +12,7 @@ function setup() {
   cvs = document.getElementById("gameCanvas");
   ctx = cvs.getContext("2d");
   cvsHeight = cvs.height;
-  cvsWidth = cvs.wdith;
+  cvsWidth = cvs.width;
 }
 
 function mouseHandler(e) {
