@@ -1,11 +1,11 @@
 export default class PlayerClass {
   constructor() {
-    this.xCoordinate = PlayerClass.canvasHeight() / 2;
-    this.yCoordinate = PlayerClass.canvasWidth() - 48;
+    this.xCoordinate = PlayerClass.canvasWidth() / 2;
+    this.yCoordinate = PlayerClass.canvasHeight() - 48;
   }
   // instance function
   static canvasWidth() {
-    return document.getElementById("gameCanvas").height;
+    return document.getElementById("gameCanvas").width;
   }
 
   static canvasHeight() {
@@ -20,6 +20,7 @@ export default class PlayerClass {
     spaceship.onload = function() {
       ctx.drawImage(spaceship, x, y);
     };
+    console.log("Spaceship x-coordinate = " + this.xCoordinate);
   }
 
 }
