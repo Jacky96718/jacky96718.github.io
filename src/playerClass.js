@@ -20,7 +20,6 @@ export default class PlayerClass {
     spaceship.onload = function() {
       ctx.drawImage(spaceship, x, y);
     };
-    console.log("Spaceship x-coordinate = " + this.xCoordinate);
   }
 
 }
