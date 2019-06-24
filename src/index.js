@@ -22,9 +22,8 @@ function mouseHandler(e) {
 }
 
 function gameLoop() {
-  console.log(cvsWidth);
+  ctx.clearRect(0, 0, cvsHeight, cvsWidth);
   draw();
-  
   requestAnimationFrame(gameLoop)
 }
 
