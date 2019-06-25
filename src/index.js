@@ -5,9 +5,11 @@ var player = new PlayerClass();
 var bg = new Image();
 bg.src="./src/img/bg.png"
 
+windows.onload=function(){
 setup();
 document.addEventListener("mousemove", mouseHandler, false);
 requestAnimationFrame(gameLoop)
+}
 
 function setup() {
   cvs = document.getElementById("gameCanvas");
@@ -22,7 +24,7 @@ function mouseHandler(e) {
 }
 
 function gameLoop() {
-  ctx.clearRect(0, 0, cvsWidth, cvsHeight);
+  ctx.drawImage(bg,0,0);
   draw();
   requestAnimationFrame(gameLoop)
 }
