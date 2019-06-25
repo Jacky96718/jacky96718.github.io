@@ -17,9 +17,7 @@ export default class PlayerClass {
     spaceship.src = "src/img/spaceship.png";
     let x = this.xCoordinate;
     let y = this.yCoordinate;
-    spaceship.onload = function() {
-      ctx.drawImage(spaceship, x, y);
-    };
+    ctx.drawImage(spaceship, x, y);
   }
 
 }
