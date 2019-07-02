@@ -1,15 +1,29 @@
-export function Player() {
-  var spaceship = new Image();
-  spaceship.src = "src/img/spaceship.png";
+export default class Player {
+    constructor() {
+        this.xCoordinate = Player.canvasWidth() / 2;
+        this.yCoordinate = Player.canvasHeight() - 48;
+        this.visible = true;
+    }
+    // instance function
+    static canvasWidth() {
+        return document.getElementById("gameCanvas").width;
+    }
 
-  var canvasWidth = document.getElementById("gameCanvas").width;
-  var canvasHeight = document.getElementById("gameCanvas").height;
-  this.xCoordinate = canvasWidth;
-  this.yCoordinate = canvasHeight - 48;
+    static canvasHeight() {
+        return document.getElementById("gameCanvas").height;
+    }
 
-  this.draw = function(ctx) {
-    spaceship.onload = function() {
-      ctx.drawImage(spaceship, Player.xCoordinate, Player.yCoordinate);
-    };
-  };
+    static get imagePadding(){
+        return 24;
+    }
+
+
+    draw(ctx) {
+        if(this.visible){
+            let spaceship = new Image();
+            spaceship.src = "src/img/spaceship.png";
+            ctx.drawImage(spaceship, this.xCoordinate - Player.imagePadding, this.yCoordinate - Player.imagePadding);
+        }
+    }
+
 }
