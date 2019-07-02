@@ -154,6 +154,7 @@ function gameLoop() {
     restartSetup();
     draw();
     Invader.changeRate = ++Invader.changeRate % 40;
+    console.log("HI");
     requestAnimationFrame(gameLoop);
 }
 
