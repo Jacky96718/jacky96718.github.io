@@ -4,6 +4,7 @@ export default class Invader {
     this.yCoordinate = _yCoordinate;
     this.visible = _visible;
     this.movingDirection = true;    // true for right, false for left
+    Invader.numOfInvader = 30;
     Invader.direction = true;
     Invader.directionChange = false;
     Invader.changeRate = 0;

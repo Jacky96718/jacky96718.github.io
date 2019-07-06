@@ -3,6 +3,8 @@ export default class Player {
         this.xCoordinate = Player.canvasWidth() / 2;
         this.yCoordinate = Player.canvasHeight() - 48;
         this.visible = true;
+        this.life = 3;
+
     }
     // instance function
     static canvasWidth() {

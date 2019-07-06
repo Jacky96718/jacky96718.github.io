@@ -24,6 +24,7 @@ bg.src ="./src/img/bg.png";
 
 setup();
 document.addEventListener("mousemove", mouseHandler, false);
+document.addEventListener("touchmove", touchHandler, false);
 document.addEventListener("keypress", keyboardHandler, false);
 window.onload=function(){
     requestAnimationFrame(gameLoop);
@@ -46,7 +47,7 @@ function setup() {
     }
 
     for (var i = 0; i < invaderRow; i++){
-        for(var j =0; j < invaderCol; j++){
+        for(var j = 0; j < invaderCol; j++){
             invader[i][j] = new Invader((cvsWidth / 2 - (9 * (Invader.imageHorizontalPadding ))) + (j * (Invader.imageHorizontalPadding * 2 ))
             , 20 + (i * (Invader.imageVerticalPadding * 2 - 20)), true);
         }
@@ -66,15 +67,38 @@ function restartSetup(){
         gameRestart = false;
     }
 }
-
+/*
 function mouseHandler(e) {
     var relativeXCoordinate = e.clientX - cvs.offsetLeft;
+    console.log(e.clientX);
     if(relativeXCoordinate > cvsWidth - Player.imagePadding){
         player.xCoordinate = cvsWidth - Player.imagePadding;
     } else if (relativeXCoordinate < 0 + Player.imagePadding){
         player.xCoordinate = 0 + Player.imagePadding;
     } else {
         player.xCoordinate = e.clientX - cvs.offsetLeft;
+    }
+}
+*/
+function mouseHandler(e) {
+    var relativeXCoordinate = e.clientX - window.innerWidth + cvsWidth;
+    if(relativeXCoordinate < 0 + Player.imagePadding){
+        player.xCoordinate = 0 + Player.imagePadding;
+    }else if(relativeXCoordinate > cvsWidth - Player.imagePadding){
+        player.xCoordinate = cvsWidth - Player.imagePadding;
+    } else {
+    player.xCoordinate = relativeXCoordinate;
+    }
+}
+
+function touchHandler(e) {
+    var relativeXCoordinate = e.pageX - window.innerWidth + cvsWidth;
+    if(relativeXCoordinate < 0 + Player.imagePadding){
+        player.xCoordinate = 0 + Player.imagePadding;
+    }else if(relativeXCoordinate > cvsWidth - Player.imagePadding){
+        player.xCoordinate = cvsWidth - Player.imagePadding;
+    } else {
+    player.xCoordinate = relativeXCoordinate;
     }
 }
 
@@ -105,7 +129,7 @@ function gameLoop() {
     for(var i = 0; i < invaderRow; i++){
         for(var j = 0; j < invaderCol; j++){
             invader[i][j].horizontalMovement(0.5);
-            restartGame(invader[i][j]);
+            invade(invader[i][j]);
         }
     }
     // ---------- End Invader Movement ----------
@@ -132,14 +156,18 @@ function gameLoop() {
     // ---------- End Bullet Movement ----------
     for(var i = 0; i < invaderRow; i++){
         for(var j = 0; j < invaderCol; j++){
-            collisionInvader(invader[i][j], bulletFromPlayer);
-            collisionPlayer(player, bulletFromInvader[i][j])
+            bulletFromPlayer.collisionInvader(invader[i][j]);
+            bulletFromInvader[i][j].collisionPlayer(player);
+            bulletFromInvader[i][j].collisionBullet(bulletFromPlayer);
         }
     }
 
-
-
-    restartSetup();
+    if(player.life <= 0){
+        gameOver();
+    }
+    if(Invader.numOfInvader <= 0){
+        invaderReposition();
+    }
     draw();
     Invader.changeRate = ++Invader.changeRate % 40;
     requestAnimationFrame(gameLoop);
@@ -167,6 +195,10 @@ function collisionInvader(_invader,_bullet){
     && Math.abs(_bullet.yCoordinate - _invader.yCoordinate) <= Bullet.imageVerticalPadding + Invader.imageVerticalPadding - 16){
         _bullet.visible = false;
         _invader.visible = false;
+        Invader.numOfInvader -= 1;
+        if(Invader.numOfInvader <= 0){
+            invaderReposition();
+        }
     }
 }
 
@@ -174,12 +206,36 @@ function collisionPlayer(_player,_bullet){
     if(!_bullet.from && _bullet.visible && _player.visible && Math.abs(_bullet.xCoordinate - _player.xCoordinate) <= Bullet.imageHorizontalPadding + Player.imagePadding
     && Math.abs(_bullet.yCoordinate - _player.yCoordinate) <= Bullet.imageVerticalPadding + Player.imagePadding){
         _bullet.visible = false;
-        _player.visible = false;
+        if(player.life > 0){
+            player.life -= 1;
+            console.log(player.life)
+        }
     }
 }
 
-function restartGame(_invader){
+function invade(_invader){
     if(_invader.visible && _invader.yCoordinate >= cvsHeight - Player.imagePadding * 2 - Invader.imageHorizontalPadding){
-        gameRestart = true;
+        gameOver();
+    }
+}
+
+function invaderReposition(){
+    for(var i = 0; i < invaderRow; i++){
+        for(var j = 0; j < invaderCol; j++){
+            invader[i][j] = new Invader((cvsWidth / 2 - (9 * (Invader.imageHorizontalPadding ))) + (j * (Invader.imageHorizontalPadding * 2 ))
+            , 20 + (i * (Invader.imageVerticalPadding * 2 - 20)), true);
+            bulletFromInvader[i][j] = new Bullet(0, 0, false, false);
+        }
+    }
+}
+
+function gameOver(){
+    player.visible = false;
+    bulletFromPlayer.visible = false
+    for(var i = 0; i < invaderRow; i++){
+        for(var j = 0; j < invaderCol; j++){
+            invader[i][j].visible = false;
+            bulletFromInvader[i][j].visible = false;
+        }
     }
 }
